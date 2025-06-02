@@ -254,6 +254,11 @@ const words = [
   "zinc",
 ];
 
+const textContainer = document.getElementById("text-container");
+const timerElement = document.getElementById("timer");
+const tryAgainButton = document.getElementById("try-again");
+const finalScoreElement = document.getElementById("final-score");
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -261,3 +266,16 @@ function shuffleArray(array) {
   }
   return array;
 }
+
+shuffleArray(words);
+
+//combine shuffled words inot one long string with spaces
+
+function generateLongText() {
+  const shuffledWords = shuffleArray([...words]);
+  return shuffledWords.join(" ");
+}
+
+let longText = generateLongText();
+
+textContainer.textContent = longText;
