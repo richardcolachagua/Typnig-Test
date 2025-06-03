@@ -259,6 +259,15 @@ const timerElement = document.getElementById("timer");
 const tryAgainButton = document.getElementById("try-again");
 const finalScoreElement = document.getElementById("final-score");
 
+let totalTyped = "";
+let currentCharIndex = 0;
+let errors = 0;
+let longText = generateLongText;
+
+textContainer.textContent = longText;
+
+//Shuffle the words array
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -275,7 +284,35 @@ function generateLongText() {
   const shuffledWords = shuffleArray([...words]);
   return shuffledWords.join(" ");
 }
+// Handle typing over displayed text and scrolling
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Backspace") {
+    if (totalTyped.length > 0) {
+      currentCharIndex = Math.max(currentCharIndex - 1, 0);
+      totalTyped = totalTyped.slice(0, -1);
+    }
+  } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+    totalTyped += e.key;
+    currentCharIndex++;
+  }
 
-let longText = generateLongText();
+  const textArray = longText.split("");
+  textContainer.innerText = "";
 
-textContainer.textContent = longText;
+  errors = 0;
+
+  for (let i = 0; i < textArray.length; i++) {
+    const span = document.createElement("span");
+
+    if (i < totalTyped.length) {
+      if (totalTyped[i] === textArray[i]) {
+        span.classList.add("correct");
+      } else {
+        span.classList.add("error");
+        errors++;
+      }
+    }
+    span.textContent = textArray[i];
+    textContainer.appendChild(span);
+  }
+});
